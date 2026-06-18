@@ -2,7 +2,20 @@
 
 > Create stunning project demos with high-quality screen recording — directly in your browser.
 
+**[🚀 Live App](https://abd-screen-recorder-web-app.streamlit.app/)** — Click here to start recording now!
+
 A premium SaaS-style screen recording web application built with **Streamlit**, **HTML5**, and the **MediaRecorder API**. No desktop installs, no plugins — just open and record.
+
+---
+
+## 👤 Author
+
+**Abdul Rehman Raza**
+
+- 📧 Email: [abdulrehmanraza60@gmail.com](mailto:abdulrehmanraza60@gmail.com)
+- 🔗 GitHub: [@AbdulRehmanRaza03](https://github.com/AbdulRehmanRaza03)
+- 💼 LinkedIn: [abdul-rehman-raza-7a125b332](https://www.linkedin.com/in/abdul-rehman-raza-7a125b332)
+- 🌐 Portfolio: [My-Portfolio](https://abdulrehmanraza03.github.io/My-Portfolio/)
 
 ---
 
@@ -20,6 +33,18 @@ A premium SaaS-style screen recording web application built with **Streamlit**, 
 - **Auto-named downloads** — `ABD_Recording_YYYYMMDD_HHMMSS.webm`
 - **Error handling** for permissions and unsupported browsers
 - **Premium dark UI** — glassmorphism, gradients, smooth animations
+
+---
+
+## 🔧 Problems Solved
+
+This project solved key issues in the initial deployment and frontend:
+
+1. **Import Path Error (`ModuleNotFoundError`)** — Fixed incorrect import path from `utils.helpers` to `helpers` to match the actual file structure.
+2. **Component Path Resolution** — Corrected the recorder component HTML file path lookup to resolve from the project root instead of nested directories.
+3. **Duplicate Layout Sections** — Removed duplicate recorder embeds and "How It Works" sections that appeared multiple times on the page.
+4. **Frontend Styling** — Upgraded UI with a professional dark theme, glassmorphism effects, gradient backgrounds, and responsive layouts for better user experience.
+5. **Streamlit Cloud Deployment** — Configured the app for smooth deployment on Streamlit Community Cloud with proper asset loading.
 
 ---
 
@@ -167,4 +192,10 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 ---
 
-<div align="center">Made with ♥ by <strong>Abdul</strong></div>
+<div align="center">
+
+**Made with ♥ by [Abdul Rehman Raza](https://github.com/AbdulRehmanRaza03)**
+
+[GitHub](https://github.com/AbdulRehmanRaza03) · [LinkedIn](https://www.linkedin.com/in/abdul-rehman-raza-7a125b332) · [Portfolio](https://abdulrehmanraza03.github.io/My-Portfolio/)
+
+</div>
