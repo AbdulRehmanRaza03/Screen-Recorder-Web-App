@@ -1,0 +1,15 @@
+[project]
+name = "abd-screen-recorder"
+version = "1.0.0"
+description = "Premium browser-based screen recorder built with Streamlit"
+authors = [{ name = "Abdul" }]
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = ["streamlit>=1.32.0"]
+
+[project.urls]
+Repository = "https://github.com/YOUR_USERNAME/abd-screen-recorder"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
