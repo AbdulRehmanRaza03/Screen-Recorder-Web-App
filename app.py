@@ -98,30 +98,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# --- Future Features Section ---
-st.markdown("""
-<div class="feature-section">
-    <div class="section-header">
-        <h2>Future Upgrade Ideas</h2>
-        <p>Planned enhancements you can add later without SQL, plus user analytics ideas.</p>
-    </div>
-    <div class="feature-grid">
-        <div class="feature-card">
-            <strong>Usage Metrics</strong>
-            <p>Show active users, session counts, and recent recordings in the dashboard.</p>
-        </div>
-        <div class="feature-card">
-            <strong>Auth & Profiles</strong>
-            <p>Add login/signup flows with Firebase, Supabase, or a no-database auth provider.</p>
-        </div>
-        <div class="feature-card">
-            <strong>Background Logs</strong>
-            <p>Capture events and browser activity for analytics without storing SQL data locally.</p>
-        </div>
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
 # --- Browser Compatibility Notice ---
 st.markdown("""
 <div class="notice-section">
