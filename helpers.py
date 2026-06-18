@@ -12,8 +12,7 @@ def load_recorder_component() -> str:
     Falls back to an inline error message if the file is missing.
     """
     component_path = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)),
-        "components",
+        os.path.dirname(__file__),
         "recorder_component.html",
     )
 

@@ -6,7 +6,7 @@ A premium SaaS-style screen recording application built with Streamlit.
 
 import streamlit as st
 import os
-from utils.helpers import load_recorder_component, get_app_config
+from helpers import load_recorder_component, get_app_config
 
 # --- Page Configuration ---
 st.set_page_config(
