@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: transparent;
+    font-family: 'Inter', sans-serif;
+    color: #e2e8f0;
+    min-height: 100vh;
+  }
+
+  /* ---- Dashboard Card ---- */
+  .dashboard {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 28px;
+    overflow: hidden;
+    backdrop-filter: blur(24px);
+  }
+
+  /* ---- Top Status Bar ---- */
+  .status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 28px;
+    background: rgba(0,0,0,0.25);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .status-left { display: flex; align-items: center; gap: 14px; }
+
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 100px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.4s ease;
+  }
+
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #475569;
+    transition: background 0.4s ease;
+  }
+
+  .status-indicator.idle .status-dot { background: #475569; }
+
+  .status-indicator.recording {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #fca5a5;
+  }
+  .status-indicator.recording .status-dot {
+    background: #ef4444;
+    box-shadow: 0 0 10px #ef4444;
+    animation: blink 1s ease-in-out infinite;
+  }
+
+  .status-indicator.paused {
+    background: rgba(251, 191, 36, 0.1);
+    border-color: rgba(251, 191, 36, 0.3);
+    color: #fde68a;
+  }
+  .status-indicator.paused .status-dot {
+    background: #fbbf24;
+    box-shadow: 0 0 10px #fbbf24;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .timer {
+    font-family: 'Space Grotesk', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    color: #f8fafc;
+    letter-spacing: 0.04em;
+    min-width: 110px;
+    text-align: center;
+  }
+
+  .timer.recording { color: #ef4444; }
+  .timer.paused { color: #fbbf24; }
+
+  .status-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .meta-badge {
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    color: #a5b4fc;
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  /* ---- Empty State ---- */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 24px;
+    text-align: center;
+    min-height: 280px;
+    transition: all 0.5s ease;
+  }
+
+  .empty-state.hidden { display: none; }
+
+  .empty-illustration {
+    width: 100px; height: 100px;
+    background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(167,139,250,0.1));
+    border: 2px dashed rgba(99,102,241,0.3);
+    border-radius: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 44px;
+    margin-bottom: 24px;
+    animation: float 4s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .empty-state h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 10px;
+  }
+
+  .empty-state p {
+    color: #64748b;
+    font-size: 15px;
+    max-width: 380px;
+    line-height: 1.6;
+    margin-bottom: 8px;
+  }
+
+  /* ---- Preview Area ---- */
+  .preview-area {
+    padding: 24px;
+    display: none;
+  }
+
+  .preview-area.visible { display: block; }
+
+  .preview-area video {
+    width: 100%;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: #000;
+    max-height: 320px;
+    object-fit: contain;
+  }
+
+  /* ---- Settings Panel ---- */
+  .settings-panel {
+    padding: 20px 28px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+  }
+
+  .setting-group { display: flex; flex-direction: column; gap: 6px; }
+
+  .setting-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .setting-select, .setting-toggle-wrapper {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: #e2e8f0;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    transition: border-color 0.2s ease;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+  }
+
+  .setting-select:focus { border-color: rgba(99,102,241,0.5); }
+  .setting-select:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .toggle-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+    user-select: none;
+  }
+
+  .toggle-wrapper:hover { border-color: rgba(99,102,241,0.3); }
+
+  .toggle {
+    position: relative;
+    width: 36px; height: 20px;
+    background: #1e293b;
+    border-radius: 100px;
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: background 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 14px; height: 14px;
+    background: #64748b;
+    border-radius: 50%;
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+
+  .toggle.on { background: rgba(99,102,241,0.3); border-color: #6366f1; }
+  .toggle.on::after { transform: translateX(16px); background: #6366f1; }
+
+  .toggle-label { font-size: 14px; color: #e2e8f0; }
+
+  /* ---- Controls ---- */
+  .controls-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 28px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 26px;
+    border-radius: 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+
+  .btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  .btn:not(:disabled):hover { transform: translateY(-2px); }
+  .btn:not(:disabled):active { transform: translateY(0); }
+
+  /* Start — glowing indigo */
+  .btn-start {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: #fff;
+    box-shadow: 0 4px 24px rgba(99,102,241,0.35);
+    min-width: 170px;
+    justify-content: center;
+    font-size: 15px;
+    padding: 15px 32px;
+    border-radius: 16px;
+  }
+
+  .btn-start::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #6366f1, #a78bfa);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .btn-start:not(:disabled):hover {
+    box-shadow: 0 6px 32px rgba(99,102,241,0.55);
+  }
+
+  .btn-start:not(:disabled):hover::before { opacity: 1; }
+
+  .btn-start span { position: relative; z-index: 1; }
+
+  /* Glow animation when idle */
+  @keyframes glow-pulse {
+    0%, 100% { box-shadow: 0 4px 24px rgba(99,102,241,0.35); }
+    50% { box-shadow: 0 4px 40px rgba(99,102,241,0.65), 0 0 60px rgba(99,102,241,0.2); }
+  }
+
+  .btn-start.idle-glow { animation: glow-pulse 2.5s ease-in-out infinite; }
+
+  /* Pause */
+  .btn-pause {
+    background: rgba(251,191,36,0.12);
+    color: #fde68a;
+    border: 1px solid rgba(251,191,36,0.3);
+  }
+  .btn-pause:not(:disabled):hover {
+    background: rgba(251,191,36,0.2);
+    box-shadow: 0 4px 16px rgba(251,191,36,0.2);
+  }
+
+  /* Resume */
+  .btn-resume {
+    background: rgba(52,211,153,0.12);
+    color: #6ee7b7;
+    border: 1px solid rgba(52,211,153,0.3);
+  }
+  .btn-resume:not(:disabled):hover {
+    background: rgba(52,211,153,0.2);
+    box-shadow: 0 4px 16px rgba(52,211,153,0.2);
+  }
+
+  /* Stop */
+  .btn-stop {
+    background: rgba(239,68,68,0.12);
+    color: #fca5a5;
+    border: 1px solid rgba(239,68,68,0.3);
+  }
+  .btn-stop:not(:disabled):hover {
+    background: rgba(239,68,68,0.2);
+    box-shadow: 0 4px 16px rgba(239,68,68,0.2);
+  }
+
+  /* Download */
+  .btn-download {
+    background: linear-gradient(135deg, rgba(14,165,233,0.2), rgba(99,102,241,0.2));
+    color: #7dd3fc;
+    border: 1px solid rgba(14,165,233,0.3);
+  }
+  .btn-download:not(:disabled):hover {
+    box-shadow: 0 4px 20px rgba(14,165,233,0.25);
+    background: linear-gradient(135deg, rgba(14,165,233,0.3), rgba(99,102,241,0.25));
+  }
+
+  .btn-icon { font-size: 16px; line-height: 1; }
+
+  /* ---- Error Toast ---- */
+  .error-toast {
+    display: none;
+    margin: 0 28px 20px;
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 12px;
+    padding: 14px 18px;
+    color: #fca5a5;
+    font-size: 14px;
+    line-height: 1.5;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .error-toast.visible { display: flex; }
+
+  /* ---- Download Ready Banner ---- */
+  .download-banner {
+    display: none;
+    margin: 0 28px 20px;
+    background: rgba(52,211,153,0.08);
+    border: 1px solid rgba(52,211,153,0.25);
+    border-radius: 12px;
+    padding: 16px 20px;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .download-banner.visible { display: flex; }
+
+  .download-banner-text { flex: 1; }
+  .download-banner-text strong { display: block; color: #6ee7b7; font-size: 14px; margin-bottom: 3px; }
+  .download-banner-text span { color: #64748b; font-size: 13px; }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 600px) {
+    .status-bar { padding: 14px 18px; }
+    .timer { font-size: 22px; }
+    .btn-start { min-width: 140px; font-size: 14px; padding: 13px 24px; }
+    .controls-bar { gap: 10px; padding: 20px 18px; }
+    .settings-panel { padding: 16px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="dashboard">
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <div class="status-left">
+      <div class="status-indicator idle" id="statusIndicator">
+        <div class="status-dot" id="statusDot"></div>
+        <span id="statusText">Idle</span>
+      </div>
+    </div>
+    <div class="timer" id="timer">00:00:00</div>
+    <div class="status-right">
+      <div class="meta-badge" id="fpsBadge">30 FPS</div>
+      <div class="meta-badge" id="qualityBadge">High</div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" id="emptyState">
+    <div class="empty-illustration">🎬</div>
+    <h3>Ready to Record</h3>
+    <p>Configure your settings below, then click <strong>Start Recording</strong> to capture your screen.</p>
+    <p style="font-size:13px; color:#334155; margin-top:8px;">Your browser will ask permission to share your screen.</p>
+  </div>
+
+  <!-- Preview Area (post-recording) -->
+  <div class="preview-area" id="previewArea">
+    <video id="previewVideo" controls></video>
+  </div>
+
+  <!-- Settings Panel -->
+  <div class="settings-panel">
+    <div class="setting-group">
+      <div class="setting-label">Frame Rate</div>
+      <select class="setting-select" id="fpsSelect">
+        <option value="30">30 FPS — Smooth</option>
+        <option value="60">60 FPS — Ultra Smooth</option>
+      </select>
+    </div>
+    <div class="setting-group">
+      <div class="setting-label">Quality</div>
+      <select class="setting-select" id="qualitySelect">
+        <option value="high">High Quality</option>
+        <option value="medium">Medium Quality</option>
+        <option value="low">Low (Smaller File)</option>
+      </select>
+    </div>
+    <div class="setting-group">
+      <div class="setting-label">Cursor Capture</div>
+      <div class="toggle-wrapper" id="cursorToggleWrapper">
+        <div class="toggle on" id="cursorToggle"></div>
+        <span class="toggle-label" id="cursorLabel">Include Cursor</span>
+      </div>
+    </div>
+    <div class="setting-group">
+      <div class="setting-label">Audio</div>
+      <div class="toggle-wrapper" id="audioToggleWrapper">
+        <div class="toggle" id="audioToggle"></div>
+        <span class="toggle-label" id="audioLabel">System Audio</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Toast -->
+  <div class="error-toast" id="errorToast">
+    <span style="font-size:18px; flex-shrink:0;">⚠️</span>
+    <span id="errorMessage">An error occurred.</span>
+  </div>
+
+  <!-- Download Banner -->
+  <div class="download-banner" id="downloadBanner">
+    <span style="font-size:28px;">✅</span>
+    <div class="download-banner-text">
+      <strong>Recording ready!</strong>
+      <span id="downloadFilename">recording.webm</span>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls-bar">
+    <button class="btn btn-start idle-glow" id="btnStart">
+      <span class="btn-icon">⏺</span>
+      <span>Start Recording</span>
+    </button>
+    <button class="btn btn-pause" id="btnPause" disabled>
+      <span class="btn-icon">⏸</span>
+      <span>Pause</span>
+    </button>
+    <button class="btn btn-resume" id="btnResume" disabled>
+      <span class="btn-icon">▶️</span>
+      <span>Resume</span>
+    </button>
+    <button class="btn btn-stop" id="btnStop" disabled>
+      <span class="btn-icon">⏹</span>
+      <span>Stop</span>
+    </button>
+    <button class="btn btn-download" id="btnDownload" disabled>
+      <span class="btn-icon">💾</span>
+      <span>Download</span>
+    </button>
+  </div>
+
+</div>
+
+<script>
+  /* =========================================================
+     ABD Screen Recorder — Core JS
+     Author: Abdul
+     ========================================================= */
+
+  // --- State ---
+  let mediaRecorder = null;
+  let recordedChunks = [];
+  let displayStream = null;
+  let timerInterval = null;
+  let elapsedSeconds = 0;
+  let cursorOn = true;
+  let audioOn = false;
+  let downloadUrl = null;
+
+  // --- Quality presets (bits per second) ---
+  const QUALITY_MAP = { high: 8_000_000, medium: 4_000_000, low: 1_500_000 };
+
+  // --- DOM refs ---
+  const btnStart    = document.getElementById('btnStart');
+  const btnPause    = document.getElementById('btnPause');
+  const btnResume   = document.getElementById('btnResume');
+  const btnStop     = document.getElementById('btnStop');
+  const btnDownload = document.getElementById('btnDownload');
+  const timerEl     = document.getElementById('timer');
+  const statusInd   = document.getElementById('statusIndicator');
+  const statusText  = document.getElementById('statusText');
+  const errorToast  = document.getElementById('errorToast');
+  const errorMsg    = document.getElementById('errorMessage');
+  const emptyState  = document.getElementById('emptyState');
+  const previewArea = document.getElementById('previewArea');
+  const previewVid  = document.getElementById('previewVideo');
+  const dlBanner    = document.getElementById('downloadBanner');
+  const dlFilename  = document.getElementById('downloadFilename');
+  const fpsBadge    = document.getElementById('fpsBadge');
+  const qualityBadge= document.getElementById('qualityBadge');
+  const fpsSelect   = document.getElementById('fpsSelect');
+  const qualitySelect = document.getElementById('qualitySelect');
+
+  // --- Cursor Toggle ---
+  const cursorToggle = document.getElementById('cursorToggle');
+  const cursorLabel  = document.getElementById('cursorLabel');
+  const cursorWrapper = document.getElementById('cursorToggleWrapper');
+
+  cursorWrapper.addEventListener('click', () => {
+    if (mediaRecorder) return; // locked during recording
+    cursorOn = !cursorOn;
+    cursorToggle.className = 'toggle ' + (cursorOn ? 'on' : '');
+    cursorLabel.textContent = cursorOn ? 'Include Cursor' : 'Hide Cursor';
+  });
+
+  // --- Audio Toggle ---
+  const audioToggle  = document.getElementById('audioToggle');
+  const audioLabel   = document.getElementById('audioLabel');
+  const audioWrapper = document.getElementById('audioToggleWrapper');
+
+  audioWrapper.addEventListener('click', () => {
+    if (mediaRecorder) return;
+    audioOn = !audioOn;
+    audioToggle.className = 'toggle ' + (audioOn ? 'on' : '');
+    audioLabel.textContent = audioOn ? 'Audio On' : 'System Audio';
+  });
+
+  // --- Badge sync ---
+  fpsSelect.addEventListener('change', () => {
+    fpsBadge.textContent = fpsSelect.value + ' FPS';
+  });
+
+  qualitySelect.addEventListener('change', () => {
+    const map = { high: 'High', medium: 'Medium', low: 'Low' };
+    qualityBadge.textContent = map[qualitySelect.value];
+  });
+
+  // --- Timer helpers ---
+  function padTwo(n) { return String(n).padStart(2, '0'); }
+
+  function formatTime(s) {
+    const h = Math.floor(s / 3600);
+    const m = Math.floor((s % 3600) / 60);
+    const sec = s % 60;
+    return padTwo(h) + ':' + padTwo(m) + ':' + padTwo(sec);
+  }
+
+  function startTimer() {
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      if (statusInd.classList.contains('recording')) {
+        elapsedSeconds++;
+        timerEl.textContent = formatTime(elapsedSeconds);
+      }
+    }, 1000);
+  }
+
+  function stopTimer() {
+    clearInterval(timerInterval);
+  }
+
+  function resetTimer() {
+    elapsedSeconds = 0;
+    timerEl.textContent = '00:00:00';
+  }
+
+  // --- Status helpers ---
+  function setStatus(state) {
+    statusInd.className = 'status-indicator ' + state;
+    const labels = { idle: 'Idle', recording: '● Recording', paused: '⏸ Paused' };
+    statusText.textContent = labels[state] || state;
+    timerEl.className = 'timer ' + (state !== 'idle' ? state : '');
+  }
+
+  // --- Error helper ---
+  function showError(msg) {
+    errorMsg.textContent = msg;
+    errorToast.classList.add('visible');
+    setTimeout(() => errorToast.classList.remove('visible'), 6000);
+  }
+
+  // --- Lock settings during recording ---
+  function lockSettings(lock) {
+    fpsSelect.disabled = lock;
+    qualitySelect.disabled = lock;
+  }
+
+  // --- Check browser support ---
+  function checkSupport() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+      showError('Your browser does not support screen recording. Please use Chrome or Edge.');
+      btnStart.disabled = true;
+      return false;
+    }
+    if (!window.MediaRecorder) {
+      showError('MediaRecorder API not supported in this browser.');
+      btnStart.disabled = true;
+      return false;
+    }
+    return true;
+  }
+
+  // --- Generate filename ---
+  function generateFilename() {
+    const now = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    return (
+      'ABD_Recording_' +
+      now.getFullYear() +
+      pad(now.getMonth() + 1) +
+      pad(now.getDate()) +
+      '_' +
+      pad(now.getHours()) +
+      pad(now.getMinutes()) +
+      pad(now.getSeconds()) +
+      '.webm'
+    );
+  }
+
+  // --- Pick MIME type ---
+  function getSupportedMime() {
+    const types = [
+      'video/webm;codecs=vp9,opus',
+      'video/webm;codecs=vp9',
+      'video/webm;codecs=vp8,opus',
+      'video/webm;codecs=vp8',
+      'video/webm',
+    ];
+    return types.find((t) => MediaRecorder.isTypeSupported(t)) || 'video/webm';
+  }
+
+  // =====================
+  //   START RECORDING
+  // =====================
+  btnStart.addEventListener('click', async () => {
+    if (!checkSupport()) return;
+
+    errorToast.classList.remove('visible');
+    dlBanner.classList.remove('visible');
+    previewArea.classList.remove('visible');
+    emptyState.classList.add('hidden');
+    recordedChunks = [];
+
+    if (downloadUrl) {
+      URL.revokeObjectURL(downloadUrl);
+      downloadUrl = null;
+    }
+
+    const fps = parseInt(fpsSelect.value);
+    const bitsPerSecond = QUALITY_MAP[qualitySelect.value] || QUALITY_MAP.high;
+    const cursor = cursorOn ? 'always' : 'never';
+
+    try {
+      const constraints = {
+        video: { cursor, frameRate: { ideal: fps, max: fps } },
+        audio: audioOn,
+      };
+
+      displayStream = await navigator.mediaDevices.getDisplayMedia(constraints);
+
+      // Handle user stopping via browser native stop button
+      displayStream.getVideoTracks()[0].addEventListener('ended', () => {
+        if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+          mediaRecorder.stop();
+        }
+      });
+
+      const mimeType = getSupportedMime();
+      mediaRecorder = new MediaRecorder(displayStream, { mimeType, videoBitsPerSecond: bitsPerSecond });
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) recordedChunks.push(e.data);
+      };
+
+      mediaRecorder.onstop = handleStop;
+      mediaRecorder.onerror = (e) => showError('Recording error: ' + e.error.name);
+
+      mediaRecorder.start(250); // collect data every 250ms
+
+      resetTimer();
+      startTimer();
+      setStatus('recording');
+      lockSettings(true);
+      btnStart.classList.remove('idle-glow');
+
+      btnStart.disabled = true;
+      btnPause.disabled = false;
+      btnResume.disabled = true;
+      btnStop.disabled = false;
+      btnDownload.disabled = true;
+
+    } catch (err) {
+      emptyState.classList.remove('hidden');
+      if (err.name === 'NotAllowedError') {
+        showError('Screen share permission denied. Please allow access when prompted and try again.');
+      } else if (err.name === 'NotSupportedError') {
+        showError('Screen recording is not supported by your browser or OS.');
+      } else {
+        showError('Could not start recording: ' + err.message);
+      }
+    }
+  });
+
+  // =====================
+  //   PAUSE RECORDING
+  // =====================
+  btnPause.addEventListener('click', () => {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+      mediaRecorder.pause();
+      setStatus('paused');
+      btnPause.disabled = true;
+      btnResume.disabled = false;
+    }
+  });
+
+  // =====================
+  //  RESUME RECORDING
+  // =====================
+  btnResume.addEventListener('click', () => {
+    if (mediaRecorder && mediaRecorder.state === 'paused') {
+      mediaRecorder.resume();
+      setStatus('recording');
+      btnPause.disabled = false;
+      btnResume.disabled = true;
+    }
+  });
+
+  // =====================
+  //   STOP RECORDING
+  // =====================
+  btnStop.addEventListener('click', () => {
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+      mediaRecorder.stop();
+    }
+    if (displayStream) {
+      displayStream.getTracks().forEach((t) => t.stop());
+      displayStream = null;
+    }
+    stopTimer();
+  });
+
+  // =====================
+  //   HANDLE STOP
+  // =====================
+  function handleStop() {
+    setStatus('idle');
+    lockSettings(false);
+
+    btnStart.disabled = false;
+    btnStart.classList.add('idle-glow');
+    btnPause.disabled = true;
+    btnResume.disabled = true;
+    btnStop.disabled = true;
+
+    if (recordedChunks.length === 0) {
+      showError('No recording data captured. The recording may have been too short.');
+      emptyState.classList.remove('hidden');
+      return;
+    }
+
+    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+    downloadUrl = URL.createObjectURL(blob);
+    const filename = generateFilename();
+
+    previewVid.src = downloadUrl;
+    previewArea.classList.add('visible');
+    emptyState.classList.add('hidden');
+
+    dlFilename.textContent = filename;
+    dlBanner.classList.add('visible');
+
+    btnDownload.disabled = false;
+    btnDownload.dataset.filename = filename;
+    btnDownload.dataset.url = downloadUrl;
+
+    mediaRecorder = null;
+    recordedChunks = [];
+  }
+
+  // =====================
+  //   DOWNLOAD
+  // =====================
+  btnDownload.addEventListener('click', () => {
+    if (!downloadUrl) return;
+    const a = document.createElement('a');
+    a.href = downloadUrl;
+    a.download = btnDownload.dataset.filename || 'recording.webm';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+
+  // --- Initial check ---
+  checkSupport();
+</script>
+</body>
+</html>
