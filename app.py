@@ -98,39 +98,25 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# --- Main Recorder Component ---
-st.markdown('<div class="recorder-wrapper">', unsafe_allow_html=True)
-st.components.v1.html(recorder_html, height=780, scrolling=False)
-st.markdown('</div>', unsafe_allow_html=True)
-
-# --- How It Works Section ---
+# --- Future Features Section ---
 st.markdown("""
-<div class="how-section">
-    <h2 class="section-title">How It Works</h2>
-    <div class="steps-grid">
-        <div class="step-card">
-            <div class="step-icon">⚙️</div>
-            <div class="step-number">01</div>
-            <h3>Configure Settings</h3>
-            <p>Choose your FPS, quality level, and cursor visibility preferences before recording.</p>
+<div class="feature-section">
+    <div class="section-header">
+        <h2>Future Upgrade Ideas</h2>
+        <p>Planned enhancements you can add later without SQL, plus user analytics ideas.</p>
+    </div>
+    <div class="feature-grid">
+        <div class="feature-card">
+            <strong>Usage Metrics</strong>
+            <p>Show active users, session counts, and recent recordings in the dashboard.</p>
         </div>
-        <div class="step-card">
-            <div class="step-icon">🖥️</div>
-            <div class="step-number">02</div>
-            <h3>Select Screen</h3>
-            <p>Click Start Recording and choose which screen, window, or tab to capture.</p>
+        <div class="feature-card">
+            <strong>Auth & Profiles</strong>
+            <p>Add login/signup flows with Firebase, Supabase, or a no-database auth provider.</p>
         </div>
-        <div class="step-card">
-            <div class="step-icon">⏺️</div>
-            <div class="step-number">03</div>
-            <h3>Record & Pause</h3>
-            <p>Record your screen with live timer feedback. Pause and resume anytime you need.</p>
-        </div>
-        <div class="step-card">
-            <div class="step-icon">💾</div>
-            <div class="step-number">04</div>
-            <h3>Download</h3>
-            <p>Stop and instantly download your recording as a high-quality WEBM file.</p>
+        <div class="feature-card">
+            <strong>Background Logs</strong>
+            <p>Capture events and browser activity for analytics without storing SQL data locally.</p>
         </div>
     </div>
 </div>

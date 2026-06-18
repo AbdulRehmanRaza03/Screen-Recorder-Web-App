@@ -173,6 +173,45 @@ div.block-container {
   gap: 1rem;
 }
 
+.feature-section {
+  margin-top: 2rem;
+  padding: 1.7rem 1.2rem;
+  background: rgba(15,23,42,0.92);
+  border: 1px solid rgba(148,163,184,0.08);
+  border-radius: 28px;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.feature-card {
+  padding: 1.3rem;
+  border-radius: 24px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(99,102,241,0.24);
+}
+
+.feature-card strong {
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.feature-card p {
+  color: var(--muted);
+  line-height: 1.75;
+}
+
 .step-card {
   padding: 1.4rem;
   border-radius: 24px;
@@ -280,6 +319,9 @@ div.block-container {
     grid-template-columns: 1fr;
   }
   .steps-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .feature-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
