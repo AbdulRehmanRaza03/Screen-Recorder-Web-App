@@ -20,42 +20,79 @@ st.set_page_config(
 def load_css():
     css_path = os.path.join(os.path.dirname(__file__), "assets", "styles.css")
     if os.path.exists(css_path):
-        with open(css_path, "r") as f:
+        with open(css_path, "r", encoding="utf-8") as f:
             st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 load_css()
 
+config = get_app_config()
+
+# --- App Banner ---
+st.markdown(f"""
+<div class="page-hero">
+  <div class="hero-copy">
+    <div class="hero-pill">Premium browser screen recorder</div>
+    <h1 class="hero-title"><span class="title-accent">ABD</span> Screen Recorder</h1>
+    <p class="hero-description">Record your screen directly from the browser, export in high-quality WEBM, and share polished demos instantly.</p>
+    <div class="hero-actions">
+      <span>Chrome & Edge ready</span>
+      <span>{config['output_format']} export</span>
+      <span>{config['version']} release</span>
+    </div>
+  </div>
+  <div class="hero-highlight">
+    <div class="highlight-card">
+      <strong>Why choose ABD?</strong>
+      <p>Fast start, clean UI, lightweight recording, and instant download support without extra plugins.</p>
+    </div>
+    <div class="highlight-grid">
+      <div class="highlight-item"><strong>60 FPS</strong><span>Smooth motion</span></div>
+      <div class="highlight-item"><strong>High Quality</strong><span>4K ready</span></div>
+      <div class="highlight-item"><strong>Easy Share</strong><span>Instant capture</span></div>
+    </div>
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
 # --- Load Recorder HTML Component ---
 recorder_html = load_recorder_component()
 
-# --- Hero Section ---
+# --- Recorder Card ---
+st.markdown('<div class="recorder-wrapper">', unsafe_allow_html=True)
+st.components.v1.html(recorder_html, height=780, scrolling=False)
+st.markdown('</div>', unsafe_allow_html=True)
+
+# --- How It Works Section ---
 st.markdown("""
-<div class="hero-section">
-    <div class="hero-badge">
-        <span class="badge-dot"></span>
-        Browser-Native Recording
+<div class="how-section">
+    <div class="section-header">
+      <h2>How It Works</h2>
+      <p>Follow these steps to capture your next screen recording in seconds.</p>
     </div>
-    <h1 class="hero-title">
-        <span class="title-accent">ABD</span> Screen Recorder
-    </h1>
-    <p class="hero-subtitle">
-        Create stunning project demos with high-quality screen recording.<br/>
-        No installs. No plugins. Just open and record.
-    </p>
-    <div class="hero-stats">
-        <div class="stat-item">
-            <span class="stat-number">60</span>
-            <span class="stat-label">FPS Support</span>
+    <div class="steps-grid">
+        <div class="step-card">
+            <div class="step-icon">⚙️</div>
+            <div class="step-number">01</div>
+            <h3>Configure Settings</h3>
+            <p>Choose FPS, quality, and cursor options then hit start.</p>
         </div>
-        <div class="stat-divider"></div>
-        <div class="stat-item">
-            <span class="stat-number">4K</span>
-            <span class="stat-label">Resolution</span>
+        <div class="step-card">
+            <div class="step-icon">🖥️</div>
+            <div class="step-number">02</div>
+            <h3>Select Screen</h3>
+            <p>Pick a full screen, window, or browser tab to capture.</p>
         </div>
-        <div class="stat-divider"></div>
-        <div class="stat-item">
-            <span class="stat-number">∞</span>
-            <span class="stat-label">Duration</span>
+        <div class="step-card">
+            <div class="step-icon">⏺️</div>
+            <div class="step-number">03</div>
+            <h3>Record & Pause</h3>
+            <p>Pause and resume recording with smooth browser controls.</p>
+        </div>
+        <div class="step-card">
+            <div class="step-icon">💾</div>
+            <div class="step-number">04</div>
+            <h3>Download</h3>
+            <p>Save your screen demo instantly as a high-quality WEBM file.</p>
         </div>
     </div>
 </div>
