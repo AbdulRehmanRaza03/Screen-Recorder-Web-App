@@ -1,201 +1,381 @@
+<div align="center">
+
+<img src="assets/images/logo.svg" width="90" height="90" alt="ABD Screen Recorder Logo"/>
+
 # 🎬 ABD Screen Recorder
 
-> Create stunning project demos with high-quality screen recording — directly in your browser.
+### *Create stunning screen recordings — directly in your browser. No installs. No plugins. Just open and record.*
 
-**[🚀 Live App](https://abd-screen-recorder-web-app.streamlit.app/)** — Click here to start recording now!
+<br/>
 
-A premium SaaS-style screen recording web application built with **Streamlit**, **HTML5**, and the **MediaRecorder API**. No desktop installs, no plugins — just open and record.
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-ABD_Screen_Recorder-6366f1?style=for-the-badge&logoColor=white)](https://abd-screen-recorder-web-app.streamlit.app/)
+[![Streamlit](https://img.shields.io/badge/Built_with-Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io)
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![License](https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Live_&_Active-22c55e?style=for-the-badge)](https://abd-screen-recorder-web-app.streamlit.app/)
 
----
+<br/>
 
-## 👤 Author
+> **A premium SaaS-style screen recording web application** built with Python, Streamlit, and the native browser MediaRecorder API. Designed with a dark futuristic UI — ready for portfolio showcase and real-world use.
 
-**Abdul Rehman Raza**
+<br/>
 
-- 📧 Email: [abdulrehmanraza60@gmail.com](mailto:abdulrehmanraza60@gmail.com)
-- 🔗 GitHub: [@AbdulRehmanRaza03](https://github.com/AbdulRehmanRaza03)
-- 💼 LinkedIn: [abdul-rehman-raza-7a125b332](https://www.linkedin.com/in/abdul-rehman-raza-7a125b332)
-- 🌐 Portfolio: [My-Portfolio](https://abdulrehmanraza03.github.io/My-Portfolio/)
+**[🔴 Open Live App](https://abd-screen-recorder-web-app.streamlit.app/)** &nbsp;|&nbsp; **[👨‍💻 View Portfolio](https://abdulrehmanraza03.github.io/My-Portfolio/)** &nbsp;|&nbsp; **[🐙 GitHub](https://github.com/AbdulRehmanRaza03)** &nbsp;|&nbsp; **[💼 LinkedIn](https://www.linkedin.com/in/abdul-rehman-raza-7a125b332)**
 
----
-
-## ✨ Features
-
-- **Browser-native recording** via `getDisplayMedia` API
-- **30 / 60 FPS** selection
-- **High / Medium / Low** quality presets (adjustable bitrate)
-- **Cursor capture** toggle
-- **System audio** capture toggle (Chrome / Edge)
-- **Pause & Resume** recording at any time
-- **Live recording timer**
-- **Status indicators** — Idle / Recording / Paused
-- **In-browser preview** after recording
-- **Auto-named downloads** — `ABD_Recording_YYYYMMDD_HHMMSS.webm`
-- **Error handling** for permissions and unsupported browsers
-- **Premium dark UI** — glassmorphism, gradients, smooth animations
+</div>
 
 ---
 
-## 🔧 Problems Solved
+## 📸 Overview
 
-This project solved key issues in the initial deployment and frontend:
+**ABD Screen Recorder** is a fully browser-native screen recording application that requires zero desktop installation. Built as a premium SaaS product experience, it leverages the HTML5 `getDisplayMedia` API and `MediaRecorder` API embedded inside a polished Streamlit interface.
 
-1. **Import Path Error (`ModuleNotFoundError`)** — Fixed incorrect import path from `utils.helpers` to `helpers` to match the actual file structure.
-2. **Component Path Resolution** — Corrected the recorder component HTML file path lookup to resolve from the project root instead of nested directories.
-3. **Duplicate Layout Sections** — Removed duplicate recorder embeds and "How It Works" sections that appeared multiple times on the page.
-4. **Frontend Styling** — Upgraded UI with a professional dark theme, glassmorphism effects, gradient backgrounds, and responsive layouts for better user experience.
-5. **Streamlit Cloud Deployment** — Configured the app for smooth deployment on Streamlit Community Cloud with proper asset loading.
+The app was designed and developed entirely by **Abdul Rehman Raza** as a portfolio-grade project demonstrating full-stack web development, UI/UX design, browser API integration, and cloud deployment skills.
 
 ---
 
-## 🛠 Technology Stack
+## ✨ Key Features
 
-| Layer | Technology |
-|-------|-----------|
-| Web framework | Python · Streamlit |
-| UI/Styling | HTML5 · CSS3 · Google Fonts |
-| Recording API | JavaScript MediaRecorder API |
-| Screen capture | `navigator.mediaDevices.getDisplayMedia` |
-| Output format | WEBM (VP8 / VP9 codec) |
-| Deployment | Streamlit Community Cloud |
+| Feature | Details |
+|---|---|
+| 🖥️ **Browser Screen Capture** | Uses `getDisplayMedia` — capture any screen, window, or tab |
+| ⏺️ **Start / Pause / Resume / Stop** | Full recording lifecycle control |
+| ⏱️ **Live Recording Timer** | Real-time HH:MM:SS counter |
+| 🎞️ **30 / 60 FPS** | Smooth or ultra-smooth recording options |
+| 🎚️ **Quality Presets** | High / Medium / Low bitrate selection |
+| 🖱️ **Cursor Capture Toggle** | Include or hide mouse cursor |
+| 🔊 **System Audio Toggle** | Capture desktop audio (Chrome/Edge) |
+| 💾 **Auto-Named Downloads** | Files named `ABD_Recording_YYYYMMDD_HHMMSS.webm` |
+| 👁️ **In-Browser Preview** | Review your recording before downloading |
+| ⚠️ **Error Handling** | Graceful errors for permissions & unsupported browsers |
+| 📱 **Responsive Design** | Works on desktop, tablet, and laptop viewports |
+| 🌑 **Premium Dark UI** | Glassmorphism, gradients, glow animations |
+
+---
+
+## 🏗️ How It Works — Architecture Deep Dive
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    User's Browser                        │
+│                                                         │
+│  ┌─────────────────────────────────────────────────┐   │
+│  │           Streamlit Python App (app.py)          │   │
+│  │                                                  │   │
+│  │  • Renders page layout & hero section            │   │
+│  │  • Loads external CSS (assets/styles.css)        │   │
+│  │  • Injects HTML component via st.components.v1   │   │
+│  └──────────────────────┬───────────────────────────┘   │
+│                         │ st.components.v1.html()        │
+│  ┌──────────────────────▼───────────────────────────┐   │
+│  │      recorder_component.html (iframe)             │   │
+│  │                                                   │   │
+│  │  ┌──────────────────────────────────────────┐    │   │
+│  │  │         JavaScript Engine                 │    │   │
+│  │  │                                           │    │   │
+│  │  │  getDisplayMedia()  ──►  MediaStream      │    │   │
+│  │  │  MediaRecorder()    ──►  Blob chunks      │    │   │
+│  │  │  URL.createObjectURL() ─► Download link   │    │   │
+│  │  └──────────────────────────────────────────┘    │   │
+│  │                                                   │   │
+│  │  CSS: Glassmorphism cards, glow animations        │   │
+│  │  State Machine: idle → recording → paused → done  │   │
+│  └───────────────────────────────────────────────────┘   │
+│                                                          │
+└──────────────────────────────────────────────────────────┘
+```
+
+### Step-by-Step Data Flow
+
+```
+1. User clicks "Start Recording"
+        │
+        ▼
+2. JS calls navigator.mediaDevices.getDisplayMedia()
+        │
+        ▼
+3. Browser shows native screen-share permission dialog
+        │
+        ▼
+4. User selects screen / window / tab → grants permission
+        │
+        ▼
+5. MediaStream created with chosen FPS + cursor settings
+        │
+        ▼
+6. MediaRecorder starts → collects Blob chunks every 250ms
+        │
+        ▼
+7. Timer ticks, status indicator animates (● Recording)
+        │
+        ▼
+8. User clicks Stop → MediaRecorder.stop() fires
+        │
+        ▼
+9. All Blob chunks assembled → single video/webm Blob
+        │
+        ▼
+10. URL.createObjectURL() → preview <video> + download link
+        │
+        ▼
+11. User previews in-browser, clicks Download
+        │
+        ▼
+12. Auto-named .webm file saved to user's device
+```
+
+---
+
+## 🛠️ Technology Stack
+
+```
+Backend / Framework
+├── Python 3.10+
+└── Streamlit 1.32+        → Web framework & component host
+
+Frontend (Embedded Component)
+├── HTML5                  → Structure & iframe component
+├── CSS3                   → Glassmorphism, gradients, animations
+├── JavaScript (ES2020)    → Recording logic & state machine
+├── MediaRecorder API      → Video encoding & chunk collection
+├── getDisplayMedia API    → Screen / window / tab capture
+└── Blob + URL API         → In-memory file handling & download
+
+Fonts & Design
+├── Inter (Google Fonts)   → Body typography
+└── Space Grotesk          → Headings & display text
+
+Deployment
+├── Streamlit Community Cloud  → Hosting (HTTPS auto-configured)
+└── GitHub                     → Version control & CI trigger
+```
+
+---
+
+## 📁 Project Structure
+
+```
+abd-screen-recorder/
+│
+├── app.py                          # Main Streamlit application entry point
+│                                   # Hero section, layout, footer
+│
+├── components/
+│   ├── __init__.py
+│   └── recorder_component.html     # Self-contained recording UI
+│                                   # (HTML + CSS + JavaScript in one file)
+│
+├── assets/
+│   ├── styles.css                  # Global premium dark theme styles
+│   └── images/
+│       └── logo.svg                # App logo (SVG, theme-compatible)
+│
+├── utils/
+│   ├── __init__.py
+│   └── helpers.py                  # Component loader + app config
+│
+├── .streamlit/
+│   ├── config.toml                 # Theme colours, server settings
+│   └── secrets.toml                # (gitignored) Cloud secrets stub
+│
+├── requirements.txt                # Python dependencies (streamlit only)
+├── pyproject.toml                  # Project metadata
+├── DEPLOYMENT.md                   # Full local + cloud deploy guide
+├── README.md                       # This file
+├── LICENSE                         # MIT License
+└── .gitignore                      # Python, venv, secrets, video files
+```
 
 ---
 
 ## 🚀 Quick Start
 
-### 1. Clone the repository
+### Prerequisites
+- Python 3.10 or higher
+- Google Chrome or Microsoft Edge (for screen recording)
+
+### Installation
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/abd-screen-recorder.git
+# 1. Clone the repository
+git clone https://github.com/AbdulRehmanRaza03/abd-screen-recorder.git
 cd abd-screen-recorder
-```
 
-### 2. Install dependencies
+# 2. (Recommended) Create a virtual environment
+python -m venv .venv
+source .venv/bin/activate        # macOS / Linux
+.venv\Scripts\activate           # Windows
 
-```bash
+# 3. Install dependencies
 pip install -r requirements.txt
-```
 
-### 3. Run the app
-
-```bash
+# 4. Launch the app
 streamlit run app.py
 ```
 
-Open `http://localhost:8501` in Chrome or Edge.
+Open **http://localhost:8501** in Chrome or Edge and start recording.
 
 ---
 
 ## 📖 Usage Guide
 
-1. **Open the app** in Chrome or Edge (recommended).
-2. **Configure settings** — choose FPS, quality, and toggles.
-3. **Click Start Recording** — your browser will prompt you to share a screen, window, or tab.
-4. **Select what to capture** and click Share.
-5. Use **Pause / Resume** as needed during recording.
-6. **Click Stop** when finished.
-7. **Preview** your recording in-browser, then **Download** it.
+```
+Step 1 → Configure Settings
+         Choose FPS (30 or 60), quality preset, cursor and audio toggles
 
----
+Step 2 → Click "Start Recording"
+         Browser prompts you to choose a screen, window, or browser tab
 
-## 🔐 Browser Permissions
+Step 3 → Select what to share → Click "Share"
+         Recording begins immediately — live timer starts ticking
 
-When you click **Start Recording**, the browser asks permission to share your screen.
+Step 4 → Pause / Resume as needed
+         Click Pause to temporarily halt, Resume to continue
 
-- You choose exactly **which screen, window, or tab** to share.
-- The app never accesses your camera or microphone (unless system audio is enabled, which captures desktop audio).
-- Permissions are **not stored** — you are asked each time you start a new recording.
+Step 5 → Click "Stop" when done
+         In-browser preview appears automatically
+
+Step 6 → Click "Download"
+         File saved as ABD_Recording_YYYYMMDD_HHMMSS.webm
+```
 
 ---
 
 ## 🌐 Browser Compatibility
 
-| Browser | Screen Recording | Audio Capture | 60 FPS |
-|---------|:---:|:---:|:---:|
-| Chrome 74+ | ✅ | ✅ | ✅ |
-| Edge 79+ | ✅ | ✅ | ✅ |
-| Firefox 66+ | ✅ | ⚠️ Partial | ✅ |
-| Safari | ❌ | ❌ | ❌ |
+| Browser | Screen Recording | System Audio | 60 FPS |
+|:--------|:---:|:---:|:---:|
+| ✅ Chrome 74+ | ✅ | ✅ | ✅ |
+| ✅ Edge 79+ | ✅ | ✅ | ✅ |
+| ⚠️ Firefox 66+ | ✅ | ⚠️ Limited | ✅ |
+| ❌ Safari | ❌ Not Supported | ❌ | ❌ |
+| ❌ Mobile Browsers | ❌ Not Supported | ❌ | ❌ |
 
-> **Note:** Safari does not support `getDisplayMedia`. Use Chrome or Edge for full functionality.
-
----
-
-## ☁️ Deploy to Streamlit Community Cloud
-
-1. Push this repository to GitHub (see below).
-2. Go to [share.streamlit.io](https://share.streamlit.io) and sign in.
-3. Click **New app**.
-4. Select your repository, branch (`main`), and set **Main file path** to `app.py`.
-5. Click **Deploy**.
-
-Your app will be live at `https://YOUR_USERNAME-abd-screen-recorder.streamlit.app`.
+> **Why Chrome/Edge?** The `getDisplayMedia` API requires a secure context (HTTPS or localhost) and is most fully implemented in Chromium-based browsers.
 
 ---
 
-## 🐙 GitHub Setup
+## ☁️ Deployment
 
-```bash
-# Initialize repo
-git init
-git add .
-git commit -m "Initial release — ABD Screen Recorder v1.0"
+### Live App
+**[https://abd-screen-recorder-web-app.streamlit.app/](https://abd-screen-recorder-web-app.streamlit.app/)**
 
-# Add remote and push
-git remote add origin https://github.com/YOUR_USERNAME/abd-screen-recorder.git
-git branch -M main
-git push -u origin main
+### Deploy Your Own — Streamlit Community Cloud
+
+```
+1. Push this repo to GitHub
+2. Visit https://share.streamlit.io → New App
+3. Repository: AbdulRehmanRaza03/abd-screen-recorder
+4. Branch: main
+5. Main file: app.py
+6. Click Deploy → Done ✅
 ```
 
----
+> Streamlit Cloud provides HTTPS automatically — required for `getDisplayMedia` to function in production.
 
-## ⚠️ Known Browser Limitations
-
-- **Safari**: `getDisplayMedia` is not supported — screen recording is unavailable.
-- **Firefox**: System audio capture is limited and may not capture desktop audio on all OS.
-- **Mobile browsers**: Screen recording via `getDisplayMedia` is not supported on iOS/Android.
-- **HTTPS required**: The app must run on HTTPS (or localhost) for `getDisplayMedia` to work. Streamlit Cloud provides HTTPS automatically.
-- **Output format**: Recordings are saved as `.webm`. Use a tool like [HandBrake](https://handbrake.fr) or [ffmpeg](https://ffmpeg.org) to convert to MP4 if needed.
+See **[DEPLOYMENT.md](DEPLOYMENT.md)** for Docker and advanced options.
 
 ---
 
-## 🔮 Future Improvements
+## ⚠️ Known Limitations
 
-- [ ] MP4 / GIF export via server-side `ffmpeg`
-- [ ] Screen annotation tools (draw, highlight)
+- **Safari** — `getDisplayMedia` is not supported; users must use Chrome or Edge
+- **Mobile** — Screen recording via `getDisplayMedia` is unavailable on iOS and Android
+- **Output format** — Recordings export as `.webm`. Convert to `.mp4` using [ffmpeg](https://ffmpeg.org) or [HandBrake](https://handbrake.fr)
+- **System audio** — Availability depends on OS and browser; most reliable on Windows with Chrome
+
+---
+
+## 🔮 Roadmap & Future Features
+
+- [ ] MP4 / GIF export via server-side `ffmpeg` processing
 - [ ] Webcam picture-in-picture overlay
-- [ ] Cloud storage integration (Google Drive / S3)
+- [ ] Screen annotation tools (draw, highlight, zoom)
+- [ ] Cloud upload (Google Drive / S3)
+- [ ] Auto-generated captions via OpenAI Whisper
 - [ ] Shareable link generation
-- [ ] Recording history & management
-- [ ] Transcript / caption generation via Whisper API
-- [ ] Custom watermark overlay
+- [ ] Recording history dashboard
+- [ ] Custom watermark / branding overlay
 
 ---
 
 ## 🧑‍💻 Skills Demonstrated
 
-| Skill | Usage |
-|-------|-------|
-| **Python** | Streamlit app structure, utility helpers |
-| **Streamlit** | Page config, custom components, layout |
-| **JavaScript** | MediaRecorder API, state machine, timer |
-| **Browser Media APIs** | `getDisplayMedia`, `MediaRecorder`, `Blob`, `URL.createObjectURL` |
-| **HTML / CSS** | Glassmorphism UI, animations, responsive layout |
-| **UI/UX Design** | Premium dark theme, micro-interactions, empty states |
-| **Web Deployment** | Streamlit Community Cloud, GitHub Actions-ready |
+This project was built to showcase a professional skill set across multiple disciplines:
+
+| Skill Area | What Was Applied |
+|:-----------|:----------------|
+| **Python** | Streamlit app architecture, utility modules, clean code structure |
+| **Streamlit** | `st.components.v1`, custom theming, `config.toml`, responsive layout |
+| **JavaScript** | MediaRecorder state machine, async API calls, Blob handling, DOM manipulation |
+| **Browser APIs** | `getDisplayMedia`, `MediaRecorder`, `Blob`, `URL.createObjectURL`, stream management |
+| **HTML5 / CSS3** | Glassmorphism design, CSS animations, keyframes, responsive grid |
+| **UI/UX Design** | Dark premium theme, micro-interactions, empty states, error feedback |
+| **Web Deployment** | Streamlit Cloud, HTTPS requirements, GitHub integration |
+| **Software Architecture** | Component separation, helper utilities, clean folder structure |
+
+---
+
+## 🌟 More Projects
+
+| Project | Description | Link |
+|:--------|:-----------|:-----|
+| 🎬 **ABD Screen Recorder** | This project — browser-native screen recorder | [Live](https://abd-screen-recorder-web-app.streamlit.app/) |
+| 📊 **Customer Churn Prediction** | ML / Data Science — predictive analytics dashboard | [Live](https://customer-churn-prediction-analytics-5syak8uuar5rp4f8ihphvs.streamlit.app/) |
+| 👗 **ABD Wears Website** | E-commerce fashion website | [Live](https://abdulrehmanraza03.github.io/ABD-Wears-Weabsite/#/) |
+| 🍕 **FFC Pizza Restaurant** | Restaurant website with full menu | [Live](https://abdulrehmanraza03.github.io/FFC_Pizza_Restaurent/) |
+| 🛠️ **The Abdul Service** | Services & collections platform | [Live](https://replit-tool--theabdulservice.replit.app/#collections) |
+
+---
+
+## 👨‍💻 About the Developer
+
+<div align="center">
+
+### Abdul Rehman Raza
+
+*Full Stack Developer · Data Science Enthusiast · UI/UX Designer*
+
+I build clean, functional, and visually polished web applications — from interactive data science dashboards to premium SaaS-style tools. Passionate about turning ideas into production-ready products.
+
+<br/>
+
+[![Portfolio](https://img.shields.io/badge/🌐_Portfolio-Visit_Site-6366f1?style=for-the-badge)](https://abdulrehmanraza03.github.io/My-Portfolio/)
+[![GitHub](https://img.shields.io/badge/GitHub-AbdulRehmanRaza03-181717?style=for-the-badge&logo=github)](https://github.com/AbdulRehmanRaza03)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Abdul_Rehman_Raza-0077B5?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/abdul-rehman-raza-7a125b332)
+[![Email](https://img.shields.io/badge/Email-abdulrehmanraza60@gmail.com-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:abdulrehmanraza60@gmail.com)
+[![Phone](https://img.shields.io/badge/WhatsApp-+92_318_1678758-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/923181678758)
+
+</div>
 
 ---
 
 ## 📄 License
 
-MIT License — see [LICENSE](LICENSE) for details.
+```
+MIT License — Copyright (c) 2024 Abdul Rehman Raza
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files, to deal in the Software
+without restriction, including without limitation the rights to use, copy,
+modify, merge, publish, distribute, sublicense, and/or sell copies of the
+Software, subject to the above copyright notice appearing in all copies.
+```
+
+See [LICENSE](LICENSE) for full terms.
 
 ---
 
 <div align="center">
 
-**Made with ♥ by [Abdul Rehman Raza](https://github.com/AbdulRehmanRaza03)**
+**⭐ If this project helped you or impressed you, please star the repository!**
 
-[GitHub](https://github.com/AbdulRehmanRaza03) · [LinkedIn](https://www.linkedin.com/in/abdul-rehman-raza-7a125b332) · [Portfolio](https://abdulrehmanraza03.github.io/My-Portfolio/)
+<br/>
+
+*Made with* ♥ *by* **Abdul Rehman Raza** *— Pakistan 🇵🇰*
+
+<br/>
+
+[![Live App](https://img.shields.io/badge/🔴_Live_Now-abd--screen--recorder-6366f1?style=for-the-badge)](https://abd-screen-recorder-web-app.streamlit.app/)
 
 </div>
